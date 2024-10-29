@@ -8,7 +8,7 @@
 <body>
 
     <header>
-        <h1 id="nowPlaying">hello   </h1>
+        <h1 id="nowPlaying">hello</h1>
     </header>
 
     <main>
@@ -40,41 +40,40 @@
         const nowPlaying = document.getElementById('nowPlaying');
 
         const trackList = [
-            'DieWithASmile.mp3',
-            'Lover.mp3',
-            'Cardigan.mp3',
-            'CruelSummer.mp3',
-            'BIRDSOFAFEATHER.mp3',
-            'SailorSong.mp3',
-            'GlueSong.mp3',
-            'CryingSeason.mp3',
-            'MoonlitFloor.mp3',
-            'RealMan.mp3',
-            'TakeMeHome.mp3',
-            'Nonsense.mp3',
-            'Espresso.mp3',
-            'BedChem.mp3',
-            'PleasePleasePlease.mp3',
-            'AREWESTILLFRIENDS.mp3',
-            'AgainAndAgain.mp3',
-            'SeeYouAgain.mp3',
-            'NoticedILaughed.mp3',
-            'APT.mp3',
-            'theboyismine.mp3',
-            'YouBelongWithMe.mp3',
-            'ANightToRemember.mp3',
-            'YoureHereThatsTheThing.mp3',
-            'theperfectpair.mp3'
+            { file: 'DieWithASmile.mp3', displayName: 'Die With A Smile' },
+            { file: 'Lover.mp3', displayName: 'Lover' },
+            { file: 'Cardigan.mp3', displayName: 'Cardigan' },
+            { file: 'CruelSummer.mp3', displayName: 'Cruel Summer' },
+            { file: 'BIRDSOFAFEATHER.mp3', displayName: 'Birds of a Feather' },
+            { file: 'SailorSong.mp3', displayName: 'Sailor Song' },
+            { file: 'GlueSong.mp3', displayName: 'Glue Song' },
+            { file: 'CryingSeason.mp3', displayName: 'Crying Season' },
+            { file: 'MoonlitFloor.mp3', displayName: 'Moonlit Floor' },
+            { file: 'RealMan.mp3', displayName: 'Real Man' },
+            { file: 'TakeMeHome.mp3', displayName: 'Take Me Home' },
+            { file: 'Nonsense.mp3', displayName: 'Nonsense' },
+            { file: 'Espresso.mp3', displayName: 'Espresso' },
+            { file: 'BedChem.mp3', displayName: 'Bed Chemistry' },
+            { file: 'PleasePleasePlease.mp3', displayName: 'Please, Please, Please' },
+            { file: 'AREWESTILLFRIENDS.mp3', displayName: 'ARE WE STILL FRIENDS?' },
+            { file: 'AgainAndAgain.mp3', displayName: 'Again and Again' },
+            { file: 'SeeYouAgain.mp3', displayName: 'See You Again' },
+            { file: 'NoticedILaughed.mp3', displayName: 'Noticed I Laughed' },
+            { file: 'APT.mp3', displayName: 'A Place to Think' },
+            { file: 'theboyismine.mp3', displayName: 'The Boy is Mine' },
+            { file: 'YouBelongWithMe.mp3', displayName: 'You Belong With Me' },
+            { file: 'ANightToRemember.mp3', displayName: 'A Night to Remember' },
+            { file: 'YoureHereThatsTheThing.mp3', displayName: 'You’re Here, That’s The Thing' },
+            { file: 'theperfectpair.mp3', displayName: 'The Perfect Pair' }
         ];
 
         let currentTrackIndex = 0;
 
         function createTrackElements() {
-            trackList.forEach(song => {
-                const trackName = song.replace('.mp3', '');
+            trackList.forEach(track => {
                 const trackDiv = document.createElement('div');
                 trackDiv.classList.add('track');
-                trackDiv.innerHTML = `<span class="track-name">${trackName}</span>`;
+                trackDiv.innerHTML = `<span class="track-name">${track.displayName}</span>`;
                 trackListElement.appendChild(trackDiv);
             });
         }
@@ -85,20 +84,7 @@
             progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
-            nowPlaying.textContent = trackList[currentTrackIndex].replace('.mp3', '');
-
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: trackList[currentTrackIndex].replace('.mp3', ''),
-                    artist: 'Shian Adriel U.',
-                    album: '10100x020032130912x010101010101',
-                    artwork: [
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '96x96', type: 'image/png' },
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '192x192', type: 'image/png' },
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '512x512', type: 'image/png' }
-                    ]
-                });
-            }
+            nowPlaying.textContent = trackList[currentTrackIndex].displayName;
         }
 
         function formatTime(seconds) {
@@ -113,7 +99,7 @@
 
         function playTrack(index) {
             if (index < trackList.length) {
-                audioPlayer.src = `../song/${trackList[index]}`;  // Updated folder name
+                audioPlayer.src = `../song/${trackList[index].file}`;
                 audioPlayer.play();
             }
         }
