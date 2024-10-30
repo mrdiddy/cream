@@ -4,23 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AREWESTILLFRIENDS??</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
     <header>
-        <h1 id="nowPlaying">hello   </h1>
+        <h1 id="nowPlaying">hello</h1>
     </header>
 
     <main>
         <section class="playlist">
             <h2>Created... by... ultraskibidiradiation</h2>
             <div id="trackList"></div>
-            <button id="playAllButton">Play All</button>
-            <button id="skipButton">Skip</button>
-            <button id="rewindButton">Rewind</button>
+            <div class="controls">
+                <button id="playAllButton">Play</button>
+                <button id="skipButton">Next (Song)</button>
+                <button id="rewindButton">Last (Song)</button>
+                <label for="volumeControl">Volume:</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+            </div>
             <div id="progressContainer">
                 <input type="range" id="progressBar" value="0" step="1" min="0">
                 <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+            </div>
+            <div id="customization">
+                <h3>Customize Artist and Album Art</h3>
+                <label for="artistInput">Artist:</label>
+                <input type="text" id="artistInput" placeholder="Shian Adriel">
+                <label for="albumArtInput">Album Art URL:</label>
+                <input type="text" id="albumArtInput" placeholder="Default album art URL">
+                <button id="applyCustomization">Apply</button>
             </div>
         </section>
     </main>
@@ -29,7 +42,7 @@
         <p>&copy; 10100x020032130912x010101010101</p>
     </footer>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="audioPlayer" controls></audio>
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
@@ -38,43 +51,65 @@
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
         const nowPlaying = document.getElementById('nowPlaying');
+        const artistInput = document.getElementById('artistInput');
+        const albumArtInput = document.getElementById('albumArtInput');
+        const applyCustomization = document.getElementById('applyCustomization');
+        const volumeControl = document.getElementById('volumeControl');
 
         const trackList = [
-            'DieWithASmile.mp3',
-            'Lover.mp3',
-            'Cardigan.mp3',
-            'CruelSummer.mp3',
-            'BIRDSOFAFEATHER.mp3',
-            'SailorSong.mp3',
-            'GlueSong.mp3',
-            'CryingSeason.mp3',
-            'MoonlitFloor.mp3',
-            'RealMan.mp3',
-            'TakeMeHome.mp3',
-            'Nonsense.mp3',
-            'Espresso.mp3',
-            'BedChem.mp3',
-            'PleasePleasePlease.mp3',
-            'AREWESTILLFRIENDS.mp3',
-            'AgainAndAgain.mp3',
-            'SeeYouAgain.mp3',
-            'NoticedILaughed.mp3',
-            'APT.mp3',
-            'theboyismine.mp3',
-            'YouBelongWithMe.mp3',
-            'ANightToRemember.mp3',
-            'YoureHereThatsTheThing.mp3',
-            'theperfectpair.mp3'
+            { file: 'DieWithASmile.mp3', displayName: 'Die With A Smile' },
+            { file: 'Lover.mp3', displayName: 'Lover' },
+            { file: 'Cardigan.mp3', displayName: 'Cardigan' },
+            { file: 'CruelSummer.mp3', displayName: 'Cruel Summer' },
+            { file: 'BIRDSOFAFEATHER.mp3', displayName: 'Birds of a Feather' },
+            { file: 'SailorSong.mp3', displayName: 'Sailor Song' },
+            { file: 'her.mp3', displayName: 'Sailo- I mean her!' },
+            { file: 'GlueSong.mp3', displayName: 'Glue Song' },
+            { file: 'CryingSeason.mp3', displayName: 'Crying Season' },
+            { file: 'MoonlitFloor.mp3', displayName: 'Moonlit Floor' },
+            { file: 'bloodline.mp3', displayName: 'bloodline' },
+            { file: 'RealMan.mp3', displayName: 'Real Man' },
+            { file: 'TakeMeHome.mp3', displayName: 'Take Me Home' },
+            { file: 'Nonsense.mp3', displayName: 'Nonsense' },
+            { file: 'Espresso.mp3', displayName: 'Espresso' },
+            { file: 'BedChem.mp3', displayName: 'Bed Chem' },
+            { file: 'PleasePleasePlease.mp3', displayName: 'Please, Please, Please' },
+            { file: 'Always.mp3', displayName: 'Always' },
+            { file: 'AREWESTILLFRIENDS.mp3', displayName: 'ARE WE STILL FRIENDS?' },
+            { file: 'AgainAndAgain.mp3', displayName: 'Again and Again' },
+            { file: 'SeeYouAgain.mp3', displayName: 'See You Again' },
+            { file: 'NoticedILaughed.mp3', displayName: 'Noticed I Laughed' },
+            { file: 'Everyday.mp3', displayName: 'Everyday' },
+            { file: 'APT.mp3', displayName: 'APT' },
+            // ALBUM #1 - Bury Me At Makeout Creek
+            { file: 'CarryMeOut.mp3', displayName: 'Carry Me Out' },
+            { file: 'DrunkWalkHome.mp3', displayName: 'Drunk Walk Home' },
+            { file: 'FrancisForever.mp3', displayName: 'Francis Forever' },
+            { file: 'IDontSmoke.mp3', displayName: "I Don't Smoke" },
+            { file: 'IWill.mp3', displayName: 'I Will' },
+            { file: 'JoblessMonday.mp3', displayName: 'Jobless Monday' },
+            { file: 'LastWordsofaShootingStar.mp3', displayName: 'Last Words of a Shooting Star' },
+            { file: 'LateSpring.mp3', displayName: 'Late Spring' },
+            { file: 'TexasReznikoff.mp3', displayName: 'Texas Reznikoff' },
+            { file: 'Townie.mp3', displayName: 'Townie' },
+            // END OF ALBUM #1  
+            { file: 'Promise.mp3', displayName: 'Promise' },
+            { file: 'theboyismine.mp3', displayName: 'The Boy is Mine' },
+            { file: 'YouBelongWithMe.mp3', displayName: 'You Belong With Me' },
+            { file: 'ANightToRemember.mp3', displayName: 'A Night to Remember' },
+            { file: 'YoureHereThatsTheThing.mp3', displayName: 'You’re Here, That’s The Thing' },
+            { file: 'theperfectpair.mp3', displayName: 'The Perfect Pair' }
         ];
 
         let currentTrackIndex = 0;
+        let customArtist = "Shian Adriel U.";
+        let customAlbumArt = "https://scontent.fmnl9-2.fna.fbcdn.net/v/t39.30808-6/330339196_111254765249957_3868741153041822997_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFbjqi5w7IuTZuOFgH3L2q3VGkziLzD3WlUaTOIvMPdaXnuXT_H5go13VGmeBV8buIphrdDnQyKG3QVcQKUgK6H&_nc_ohc=0IsG-Z3FhxYQ7kNvgHhkblR&_nc_zt=23&_nc_ht=scontent.fmnl9-2.fna&_nc_gid=AKYbxxbRBGzsfleBCzM4LSo&oh=00_AYCyA1kT_yUxo2JCKiwRLUpUOPHgX9C-FtmBIAgKe0w6nA&oe=67274748";  // Default album art URL
 
         function createTrackElements() {
             trackList.forEach(song => {
-                const trackName = song.replace('.mp3', '');
-                const trackDiv = document.createElement('div');
+                const trackDiv = document.createElement('div'); 
                 trackDiv.classList.add('track');
-                trackDiv.innerHTML = `<span class="track-name">${trackName}</span>`;
+                trackDiv.innerHTML = `<span class="track-name">${song.displayName}</span>`;
                 trackListElement.appendChild(trackDiv);
             });
         }
@@ -85,18 +120,14 @@
             progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
-            nowPlaying.textContent = trackList[currentTrackIndex].replace('.mp3', '');
+            nowPlaying.textContent = trackList[currentTrackIndex].displayName;
 
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: trackList[currentTrackIndex].replace('.mp3', ''),
-                    artist: 'Shian Adriel U.',
+                    title: trackList[currentTrackIndex].displayName,
+                    artist: customArtist,
                     album: '10100x020032130912x010101010101',
-                    artwork: [
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '96x96', type: 'image/png' },
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '192x192', type: 'image/png' },
-                        { src: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/462937494_517135317873403_1948664123266585843_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGKJVOSu94KlRP-mskRsvR0_a8VIUdR-d_9rxUhR1H535znaFX1f0Ri-E27dxxk34aCqbDpN4_9nQfe7-tWV4Az&_nc_ohc=WHzh84XS1PMQ7kNvgG8HF6x&_nc_zt=23&_nc_ht=scontent.fmnl9-1.fna&_nc_gid=AZ84rkpe4RHBYnBDEW4w8RQ&oh=00_AYD3oskCCg50-f0ttnso0PdE752KeFrlmF9WgsXKkyMEzw&oe=67264757', sizes: '512x512', type: 'image/png' }
-                    ]
+                    artwork: [{ src: customAlbumArt, sizes: '512x512', type: 'image/png' }]
                 });
             }
         }
@@ -107,13 +138,9 @@
             return `${minutes}:${secs < 10 ? '0' + secs : secs}`;
         }
 
-        function playAllTracks() {
-            playTrack(currentTrackIndex);
-        }
-
         function playTrack(index) {
             if (index < trackList.length) {
-                audioPlayer.src = `../song/${trackList[index]}`;  // Updated folder name
+                audioPlayer.src = `../song/${trackList[index].file}`;
                 audioPlayer.play();
             }
         }
@@ -132,17 +159,26 @@
             }
         }
 
-        audioPlayer.addEventListener('ended', skipTrack);
+        function setVolume() {
+            audioPlayer.volume = volumeControl.value;
+        }
+
+        playAllButton.addEventListener('click', () => {
+            playTrack(currentTrackIndex);
+        });
+
+        skipButton.addEventListener('click', skipTrack);
+        rewindButton.addEventListener('click', rewindTrack);
+        volumeControl.addEventListener('input', setVolume);
+
         audioPlayer.addEventListener('timeupdate', updateProgressBar);
+        applyCustomization.addEventListener('click', () => {
+            customArtist = artistInput.value || customArtist;
+            customAlbumArt = albumArtInput.value || customAlbumArt;
+        });
 
         createTrackElements();
-
-        document.getElementById('playAllButton').addEventListener('click', playAllTracks);
-        document.getElementById('skipButton').addEventListener('click', skipTrack);
-        document.getElementById('rewindButton').addEventListener('click', rewindTrack);
-        progressBar.addEventListener('input', () => {
-            audioPlayer.currentTime = progressBar.value;
-        });
     </script>
+
 </body>
 </html>
