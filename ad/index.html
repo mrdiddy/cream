@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AREWESTILLFRIENDS??</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -15,12 +16,22 @@
         <section class="playlist">
             <h2>Created... by... ultraskibidiradiation</h2>
             <div id="trackList"></div>
-            <button id="playAllButton">Play All</button>
-            <button id="skipButton">Skip</button>
-            <button id="rewindButton">Rewind</button>
+            <div class="controls">
+                <button id="playAllButton">Play</button>
+                <button id="skipButton">Next (Song)</button>
+                <button id="rewindButton">Last (Song)</button>
+            </div>
             <div id="progressContainer">
                 <input type="range" id="progressBar" value="0" step="1" min="0">
                 <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+            </div>
+            <div id="customization">
+                <h3>Customize Artist and Album Art</h3>
+                <label for="artistInput">Artist:</label>
+                <input type="text" id="artistInput" placeholder="Shian Adriel U.">
+                <label for="albumArtInput">Album Art URL:</label>
+                <input type="text" id="albumArtInput" placeholder="Default album art URL">
+                <button id="applyCustomization">Apply</button>
             </div>
         </section>
     </main>
@@ -38,6 +49,9 @@
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
         const nowPlaying = document.getElementById('nowPlaying');
+        const artistInput = document.getElementById('artistInput');
+        const albumArtInput = document.getElementById('albumArtInput');
+        const applyCustomization = document.getElementById('applyCustomization');
 
         const trackList = [
             { file: 'DieWithASmile.mp3', displayName: 'Die With A Smile' },
@@ -68,12 +82,14 @@
         ];
 
         let currentTrackIndex = 0;
+        let customArtist = "Shian Adriel U.";
+        let customAlbumArt = "https://scontent.fmnl9-2.fna.fbcdn.net/v/t39.30808-6/330339196_111254765249957_3868741153041822997_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFbjqi5w7IuTZuOFgH3L2q3VGkziLzD3WlUaTOIvMPdaXnuXT_H5go13VGmeBV8buIphrdDnQyKG3QVcQKUgK6H&_nc_ohc=0IsG-Z3FhxYQ7kNvgHhkblR&_nc_zt=23&_nc_ht=scontent.fmnl9-2.fna&_nc_gid=AKYbxxbRBGzsfleBCzM4LSo&oh=00_AYCyA1kT_yUxo2JCKiwRLUpUOPHgX9C-FtmBIAgKe0w6nA&oe=67274748";  // Default album art URL
 
         function createTrackElements() {
-            trackList.forEach(track => {
+            trackList.forEach(song => {
                 const trackDiv = document.createElement('div');
                 trackDiv.classList.add('track');
-                trackDiv.innerHTML = `<span class="track-name">${track.displayName}</span>`;
+                trackDiv.innerHTML = `<span class="track-name">${song.displayName}</span>`;
                 trackListElement.appendChild(trackDiv);
             });
         }
@@ -85,16 +101,21 @@
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
             nowPlaying.textContent = trackList[currentTrackIndex].displayName;
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: trackList[currentTrackIndex].displayName,
+                    artist: customArtist,
+                    album: '10100x020032130912x010101010101',
+                    artwork: [{ src: customAlbumArt, sizes: '512x512', type: 'image/png' }]
+                });
+            }
         }
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' + secs : secs}`;
-        }
-
-        function playAllTracks() {
-            playTrack(currentTrackIndex);
         }
 
         function playTrack(index) {
@@ -118,17 +139,32 @@
             }
         }
 
+        function changeArtist(newArtist) {
+            customArtist = newArtist;
+        }
+
+        function changeAlbumArt(newAlbumArt) {
+            customAlbumArt = newAlbumArt || customAlbumArt;  // Keep default if no new album art is provided
+        }
+
         audioPlayer.addEventListener('ended', skipTrack);
         audioPlayer.addEventListener('timeupdate', updateProgressBar);
 
         createTrackElements();
 
-        document.getElementById('playAllButton').addEventListener('click', playAllTracks);
+        document.getElementById('playAllButton').addEventListener('click', () => playTrack(currentTrackIndex));
         document.getElementById('skipButton').addEventListener('click', skipTrack);
         document.getElementById('rewindButton').addEventListener('click', rewindTrack);
         progressBar.addEventListener('input', () => {
             audioPlayer.currentTime = progressBar.value;
         });
+
+        applyCustomization.addEventListener('click', () => {
+            const newArtist = artistInput.value.trim();
+            const newAlbumArt = albumArtInput.value.trim();
+            if (newArtist) changeArtist(newArtist);
+            changeAlbumArt(newAlbumArt);
+        });
     </script>
 </body>
-</html>
+</html> 
