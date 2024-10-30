@@ -20,6 +20,8 @@
                 <button id="playAllButton">Play</button>
                 <button id="skipButton">Next (Song)</button>
                 <button id="rewindButton">Last (Song)</button>
+                <label for="volumeControl">Volume:</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
             </div>
             <div id="progressContainer">
                 <input type="range" id="progressBar" value="0" step="1" min="0">
@@ -40,7 +42,7 @@
         <p>&copy; 10100x020032130912x010101010101</p>
     </footer>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="audioPlayer" controls></audio>
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
@@ -52,6 +54,7 @@
         const artistInput = document.getElementById('artistInput');
         const albumArtInput = document.getElementById('albumArtInput');
         const applyCustomization = document.getElementById('applyCustomization');
+        const volumeControl = document.getElementById('volumeControl');
 
         const trackList = [
             { file: 'DieWithASmile.mp3', displayName: 'Die With A Smile' },
@@ -60,20 +63,37 @@
             { file: 'CruelSummer.mp3', displayName: 'Cruel Summer' },
             { file: 'BIRDSOFAFEATHER.mp3', displayName: 'Birds of a Feather' },
             { file: 'SailorSong.mp3', displayName: 'Sailor Song' },
+            { file: 'her.mp3', displayName: 'Sailo- I mean her!' },
             { file: 'GlueSong.mp3', displayName: 'Glue Song' },
             { file: 'CryingSeason.mp3', displayName: 'Crying Season' },
             { file: 'MoonlitFloor.mp3', displayName: 'Moonlit Floor' },
+            { file: 'bloodline.mp3', displayName: 'bloodline' },
             { file: 'RealMan.mp3', displayName: 'Real Man' },
             { file: 'TakeMeHome.mp3', displayName: 'Take Me Home' },
             { file: 'Nonsense.mp3', displayName: 'Nonsense' },
             { file: 'Espresso.mp3', displayName: 'Espresso' },
-            { file: 'BedChem.mp3', displayName: 'Bed Chemistry' },
+            { file: 'BedChem.mp3', displayName: 'Bed Chem' },
             { file: 'PleasePleasePlease.mp3', displayName: 'Please, Please, Please' },
+            { file: 'Always.mp3', displayName: 'Always' },
             { file: 'AREWESTILLFRIENDS.mp3', displayName: 'ARE WE STILL FRIENDS?' },
             { file: 'AgainAndAgain.mp3', displayName: 'Again and Again' },
             { file: 'SeeYouAgain.mp3', displayName: 'See You Again' },
             { file: 'NoticedILaughed.mp3', displayName: 'Noticed I Laughed' },
-            { file: 'APT.mp3', displayName: 'A Place to Think' },
+            { file: 'Everyday.mp3', displayName: 'Everyday' },
+            { file: 'APT.mp3', displayName: 'APT' },
+            // ALBUM #1 - Bury Me At Makeout Creek
+            { file: 'CarryMeOut.mp3', displayName: 'Carry Me Out' },
+            { file: 'DrunkWalkHome.mp3', displayName: 'Drunk Walk Home' },
+            { file: 'FrancisForever.mp3', displayName: 'Francis Forever' },
+            { file: 'IDontSmoke.mp3', displayName: "I Don't Smoke" },
+            { file: 'IWill.mp3', displayName: 'I Will' },
+            { file: 'JoblessMonday.mp3', displayName: 'Jobless Monday' },
+            { file: 'LastWordsofaShootingStar.mp3', displayName: 'Last Words of a Shooting Star' },
+            { file: 'LateSpring.mp3', displayName: 'Late Spring' },
+            { file: 'TexasReznikoff.mp3', displayName: 'Texas Reznikoff' },
+            { file: 'Townie.mp3', displayName: 'Townie' },
+            // END OF ALBUM #1  
+            { file: 'Promise.mp3', displayName: 'Promise' },
             { file: 'theboyismine.mp3', displayName: 'The Boy is Mine' },
             { file: 'YouBelongWithMe.mp3', displayName: 'You Belong With Me' },
             { file: 'ANightToRemember.mp3', displayName: 'A Night to Remember' },
@@ -87,7 +107,7 @@
 
         function createTrackElements() {
             trackList.forEach(song => {
-                const trackDiv = document.createElement('div');
+                const trackDiv = document.createElement('div'); 
                 trackDiv.classList.add('track');
                 trackDiv.innerHTML = `<span class="track-name">${song.displayName}</span>`;
                 trackListElement.appendChild(trackDiv);
@@ -139,32 +159,26 @@
             }
         }
 
-        function changeArtist(newArtist) {
-            customArtist = newArtist;
+        function setVolume() {
+            audioPlayer.volume = volumeControl.value;
         }
 
-        function changeAlbumArt(newAlbumArt) {
-            customAlbumArt = newAlbumArt || customAlbumArt;  // Keep default if no new album art is provided
-        }
+        playAllButton.addEventListener('click', () => {
+            playTrack(currentTrackIndex);
+        });
 
-        audioPlayer.addEventListener('ended', skipTrack);
+        skipButton.addEventListener('click', skipTrack);
+        rewindButton.addEventListener('click', rewindTrack);
+        volumeControl.addEventListener('input', setVolume);
+
         audioPlayer.addEventListener('timeupdate', updateProgressBar);
+        applyCustomization.addEventListener('click', () => {
+            customArtist = artistInput.value || customArtist;
+            customAlbumArt = albumArtInput.value || customAlbumArt;
+        });
 
         createTrackElements();
-
-        document.getElementById('playAllButton').addEventListener('click', () => playTrack(currentTrackIndex));
-        document.getElementById('skipButton').addEventListener('click', skipTrack);
-        document.getElementById('rewindButton').addEventListener('click', rewindTrack);
-        progressBar.addEventListener('input', () => {
-            audioPlayer.currentTime = progressBar.value;
-        });
-
-        applyCustomization.addEventListener('click', () => {
-            const newArtist = artistInput.value.trim();
-            const newAlbumArt = albumArtInput.value.trim();
-            if (newArtist) changeArtist(newArtist);
-            changeAlbumArt(newAlbumArt);
-        });
     </script>
+
 </body>
-</html> 
+</html>
